@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="index.css" type="text/css">
+		<script type="text/javascript" src="/jquery.js"></script>
+		<script type="text/javascript" src="/jqueryui/jquery-ui.js"></script>
+	</head>
+	<body>
+		<div class="row">
+			<h1>Current service status:</h1><h1 id="servicestatus"></h1>
+		</div>
+		<h2>Current torrents:</h2>
+		<pre id="currenttorrents"></pre>
+		<br>
+		<form>
+			<input class="textinput" type="text" name="magnetlink">
+			<button class="submitbutton" type="button" onclick="addtorrent($('input[name=magnetlink]').val())">Add torrent</button>
+			<h3 id="result1">&nbsp</h3>
+		</form>
+		<form>
+			<input class="textinput" type="text" name="id">
+			<button class="submitbutton" type="button" onclick="removetorrent($('input[name=id]').val())">Remove torrent</button>
+			<h3 id="result2">&nbsp</h3>
+		</form>
+		<br>
+		<span id="divider"></span>
+	</body>
+</html>
+
+<script>
+	$(document).ready(function() {
+		service();
+		checktorrents();
+		setInterval(service, 1000);
+		setInterval(checktorrents, 1000);
+		generatedivider();
+	});
+	
+	$(window).resize(function()  {
+		generatedivider();
+	});
+	
+	function addtorrent(m) {
+		$("#result1").css("color", "white");
+		$.get("addtorrent.php?m=" + m, function(data, status) {
+			$("input[name=magnetlink]").val("");
+			$("#result1").html(JSON.parse(data)[0].toUpperCase());
+		});
+		$("#result1").animate({color: '#FFFFFF'}, 1000);
+		$("#result1").animate({color: '#000000'}, 1000, function() {
+			$("#result1").html("&nbsp");
+		});
+	}
+	
+	function removetorrent(id) {
+		$.get("removetorrent.php?id=" + id, function(data, status) {
+			$("input[name=id]").val("");
+			$("#result2").html(JSON.parse(data)[0].toUpperCase());
+		});
+		$("#result2").animate({color: '#FFFFFF'}, 1000);
+		$("#result2").animate({color: '#000000'}, 1000, function() {
+			$("#result2").html("&nbsp");
+		});
+	}
+	
+	function service() {
+		$.get("servicestatus.php", function(data, status){
+			var status = JSON.parse(data)[0].toUpperCase();
+			$("#servicestatus").html(JSON.parse(data)[0].toUpperCase());
+			if (status == "ACTIVE") {
+				$("#servicestatus").css("color", "green");
+			}
+			else {
+				$("#servicestatus").css("color", "red");
+			}
+		});
+	}
+	
+	function checktorrents() {
+		$.get("checktorrents.php", function(data, status){
+			$("#currenttorrents").html(makeUL(JSON.parse(data)));
+		});
+	}
+	
+	function makeUL(array) {
+		var list = document.createElement('ul');
+		for (var i = 0; i < array.length; i++) {
+			var item = document.createElement('li');
+			item.appendChild(document.createTextNode(array[i]));
+			list.appendChild(item);
+		}
+		return list;
+	}
+	
+	function generatedivider() {
+		var width = $(window).width();
+		var divider = document.getElementById("divider");
+		var dashes = "";
+		divider.innerHTML = dashes;
+		for (let i = 0; i < (Math.floor(width / 17)); i++) {
+			dashes = dashes.concat("- ");
+		}
+		divider.innerHTML = dashes;
+	}
+</script>

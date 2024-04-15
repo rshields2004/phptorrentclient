@@ -1,0 +1,54 @@
+body {
+	font-family: monospace; 
+	background-color: black; 
+	color: white;
+	font-size: 15px;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+
+#load-changelog {
+	white-space: pre-line;
+}
+
+.row {
+	display: flex;
+}
+
+.textinput {
+	width: 80%;
+    height: fit-content;
+    font-family: monospace;
+    background-color: black;
+    color: white;
+	border: 2px solid black;
+    border-bottom: 2px solid white;
+    padding: 8px 8px;
+    font-size: 13px;
+}
+
+.textinput:focus, .textinput:hover {
+	border: 2px solid white;
+	outline: none;
+}
+
+.submitbutton {
+    width: auto;
+    height: fit-content;
+    font-family: monospace;
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 8px 8px;	
+}
+
+.result1 {
+	color: white;
+}
